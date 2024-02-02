@@ -1,1 +1,4 @@
-console.log("Hello via Bun!");
+import "reflect-metadata";
+import { libMain } from "./lib";
+
+libMain();

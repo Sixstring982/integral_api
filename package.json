@@ -2,8 +2,20 @@
   "name": "integral_interview",
   "module": "src/main.ts",
   "type": "module",
+  "scripts": {
+    "serve": "bun run ./src/main.ts"
+  },
+  "dependencies": {
+    "@bogeychan/elysia-logger": "^0.0.16",
+    "elysia": "^0.8.15",
+    "reflect-metadata": "^0.2.1",
+    "tsyringe": "^4.8.0",
+    "zod": "^3.22.4"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "prettier": "^3.2.4",
+    "ts-node": "^10.9.2"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

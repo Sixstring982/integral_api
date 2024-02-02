@@ -1,23 +1,36 @@
 {
-  description = "Integral interview";
-
   inputs = {
-    flake-utils.url = "github:numtide/flake-utils";
-    nix-filter.url = "github:numtide/nix-filter";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    # nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    systems.url = "github:nix-systems/default";
   };
 
-  outputs = { self, nixpkgs, flake-utils, nix-filter }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let legacyPackages = nixpkgs.legacyPackages.${system}; in
-      {
-        devShells = {
-          default = legacyPackages.mkShell {
-            packages = [
-              legacyPackages.bun
-              legacyPackages.nodejs_21
-            ];
-          };
-        };
-      });
+  outputs = {
+    systems,
+    nixpkgs,
+    ...
+  } @ inputs: let
+    eachSystem = f:
+      nixpkgs.lib.genAttrs (import systems) (
+        system:
+          f nixpkgs.legacyPackages.${system}
+      );
+  in {
+    devShells = eachSystem (pkgs: {
+      default = pkgs.mkShell {
+        buildInputs = [
+          pkgs.nodejs
+          # You can set the major version of Node.js to a specific one instead
+          # of the default version
+          # pkgs.nodejs-19_x
+
+          # You can choose pnpm, yarn, or none (npm).
+          pkgs.nodePackages.pnpm
+          # pkgs.yarn
+
+          pkgs.nodePackages.typescript
+          pkgs.nodePackages.typescript-language-server
+        ];
+      };
+    });
+  };
 }
