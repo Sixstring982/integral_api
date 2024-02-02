@@ -22,11 +22,11 @@ export function listNormalTransactionsByAddress(
     endblock: "99999999",
     page: "1",
     offset: "10",
-    sort: "asc",
+    sort: "desc",
     apikey: Bun.env.ETHERSCAN_API_KEY ?? "<no API key>",
   } satisfies Record<string, string>);
 
-  const uri = `${baseUri}${params.toString()}`;
+  const uri = `${baseUri}?${params.toString()}`;
 
   return fetch(uri)
     .then((response) => response.json())

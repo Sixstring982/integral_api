@@ -1,4 +1,3 @@
-import { injectable } from "tsyringe";
 import type { Account } from "./account";
 import { AccountId } from "./account";
 import type { AccountsClient } from "./accounts_client";
@@ -9,7 +8,6 @@ import { getAccountTransactions } from "./get_account_transactions";
  * Implementation of {@link AccountsClient} which reads from a hardcoded list
  *  of accounts.
  */
-@injectable()
 export class HardcodedAccountsClient implements AccountsClient {
   getAccountById(accountId: AccountId): Promise<Account | undefined> {
     return Promise.resolve(ACCOUNTS.all.find((x) => x.id === accountId));

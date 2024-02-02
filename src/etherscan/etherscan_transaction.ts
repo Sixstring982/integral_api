@@ -5,23 +5,31 @@ import { Address } from "../address/address";
 export type EtherscanTransaction = Readonly<{
   blockNumber: number;
   timeStamp: Date;
-  transactionHash: TransactionHash;
+  hash: TransactionHash;
   from: Address;
-  contractAddress: Address;
+  to?: Address;
+  value: number;
+  contractAddress?: Address;
 }>;
 
 export const EtherscanTransaction = {
   schema: z
     .object({
-      blockNumber: z.number().positive().int(),
-      timeStamp: z
+      blockNumber: z.coerce.number().positive().int(),
+      timeStamp: z.coerce
         .number()
         .positive()
         .int()
         .transform((x) => new Date(x * 1_000)),
-      transactionHash: TransactionHash.schema,
+      hash: TransactionHash.schema,
       from: Address.schema,
-      contractAddress: Address.schema,
+      to: z.union([z.literal(""), Address.schema]),
+      value: z.coerce.number(),
+      contractAddress: z.union([z.literal(""), Address.schema]),
     })
-    .transform<EtherscanTransaction>((x) => x),
+    .transform<EtherscanTransaction>((x) => ({
+      ...x,
+      to: x.to === "" ? undefined : x.to,
+      contractAddress: x.contractAddress === "" ? undefined : x.contractAddress,
+    })),
 };

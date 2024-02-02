@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { brand, type Branded } from "../brand";
+import { Address } from "../address/address";
 
 const ACCOUNT_ID: unique symbol = Symbol("AccountId");
 export type AccountId = Branded<typeof ACCOUNT_ID, string>;
@@ -10,5 +11,14 @@ export const AccountId = {
 
 export type Account = Readonly<{
   id: AccountId;
-  address: string;
+  address: Address;
 }>;
+
+export const Account = {
+  schema: z
+    .object({
+      id: AccountId.schema,
+      address: Address.schema,
+    })
+    .transform<Account>((x) => x),
+};
